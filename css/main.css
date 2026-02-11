@@ -1,0 +1,559 @@
+/* ===================================
+   POLICE VS ZOMBIES - MAIN STYLES
+   =================================== */
+
+/* CSS Variables */
+:root {
+    /* Цвета */
+    --color-primary: #4CAF50;
+    --color-secondary: #2196F3;
+    --color-danger: #F44336;
+    --color-warning: #FF9800;
+    --color-success: #4CAF50;
+    --color-dark: #212121;
+    --color-light: #FAFAFA;
+    --color-text: #FFFFFF;
+    
+    /* Размеры */
+    --panel-height: 60px;
+    --ui-padding: 10px;
+    --border-radius: 8px;
+    
+    /* Тени */
+    --shadow-small: 0 2px 4px rgba(0,0,0,0.2);
+    --shadow-medium: 0 4px 8px rgba(0,0,0,0.3);
+    --shadow-large: 0 8px 16px rgba(0,0,0,0.4);
+    
+    /* Z-index слои */
+    --z-background: 0;
+    --z-game: 10;
+    --z-ui: 100;
+    --z-overlay: 500;
+    --z-modal: 1000;
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Roboto Condensed', 'Arial', sans-serif;
+    background-color: #000000;
+    color: var(--color-text);
+}
+
+/* ===================================
+   LOADING SCREEN
+   =================================== */
+
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out;
+}
+
+#loading-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-content {
+    text-align: center;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.loading-content h1 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.loading-bar {
+    width: 100%;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.loading-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+#loading-text {
+    font-size: 1.2em;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ===================================
+   GAME CONTAINER
+   =================================== */
+
+#game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0a0a0a;
+}
+
+#game-canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    background: #1a1a1a;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    image-rendering: pixelated; /* Для пиксельной графики */
+    image-rendering: crisp-edges;
+}
+
+/* ===================================
+   UI OVERLAY
+   =================================== */
+
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Клики проходят через overlay */
+    z-index: var(--z-ui);
+}
+
+/* Разрешаем клики только на интерактивных элементах */
+#ui-overlay > * {
+    pointer-events: auto;
+}
+
+.ui-panel {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(76, 175, 80, 0.3);
+    border-radius: var(--border-radius);
+    padding: var(--ui-padding);
+    box-shadow: var(--shadow-medium);
+    backdrop-filter: blur(5px);
+}
+
+/* ===================================
+   TOP PANEL (Верхняя панель)
+   =================================== */
+
+#top-panel {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    padding: 10px 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.stat-item .icon {
+    font-size: 1.5em;
+}
+
+/* ===================================
+   UNITS PANEL (Панель юнитов)
+   =================================== */
+
+#units-panel {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 400px;
+    max-width: 80%;
+}
+
+#units-panel h3 {
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    color: var(--color-primary);
+}
+
+#unit-cards {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Карточка юнита */
+.unit-card {
+    width: 80px;
+    height: 100px;
+    background: linear-gradient(135deg, #2a2a3e 0%, #1a1a2e 100%);
+    border: 2px solid rgba(76, 175, 80, 0.5);
+    border-radius: 8px;
+    padding: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.unit-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-primary);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.unit-card.selected {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+}
+
+.unit-card.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+.unit-card .unit-icon {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+
+.unit-card .unit-name {
+    font-size: 0.7em;
+    text-align: center;
+    margin-bottom: 3px;
+}
+
+.unit-card .unit-cost {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-size: 0.8em;
+    color: var(--color-warning);
+    font-weight: bold;
+}
+
+/* Индикатор перезарядки */
+.unit-card .cooldown-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: rgba(0, 0, 0, 0.7);
+    transition: height 0.1s linear;
+}
+
+/* ===================================
+   CONTROL BUTTONS
+   =================================== */
+
+#control-buttons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.icon-btn {
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(76, 175, 80, 0.5);
+    border-radius: 50%;
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
+}
+
+/* ===================================
+   MODALS
+   =================================== */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: var(--z-modal);
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.modal {
+    background: linear-gradient(135deg, #2a2a3e 0%, #1a1a2e 100%);
+    border: 3px solid var(--color-primary);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal h2 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: var(--color-primary);
+}
+
+.modal p {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.btn-secondary {
+    background: var(--color-secondary);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #1976D2;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: var(--color-danger);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #D32F2F;
+    transform: translateY(-2px);
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
+/* Планшеты */
+@media (max-width: 1024px) {
+    #top-panel {
+        font-size: 0.9em;
+    }
+    
+    #units-panel {
+        min-width: 300px;
+    }
+    
+    .unit-card {
+        width: 70px;
+        height: 90px;
+    }
+}
+
+/* Телефоны */
+@media (max-width: 768px) {
+    .loading-content h1 {
+        font-size: 1.8em;
+    }
+    
+    #top-panel {
+        font-size: 0.8em;
+        gap: 10px;
+        padding: 8px 15px;
+    }
+    
+    #units-panel {
+        min-width: 250px;
+        max-width: 95%;
+    }
+    
+    .unit-card {
+        width: 60px;
+        height: 80px;
+    }
+    
+    .icon-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2em;
+    }
+}
+
+/* Маленькие телефоны */
+@media (max-width: 480px) {
+    #top-panel {
+        flex-direction: column;
+        gap: 5px;
+        top: 5px;
+    }
+    
+    .stat-item {
+        font-size: 1em;
+    }
+    
+    #units-panel {
+        bottom: 5px;
+    }
+    
+    .unit-card {
+        width: 50px;
+        height: 70px;
+    }
+}
+
+/* Landscape режим на мобильных */
+@media (max-height: 500px) and (orientation: landscape) {
+    #top-panel {
+        top: 5px;
+        font-size: 0.7em;
+    }
+    
+    #units-panel {
+        bottom: 5px;
+        min-width: auto;
+    }
+    
+    .unit-card {
+        width: 50px;
+        height: 60px;
+    }
+    
+    #control-buttons {
+        top: 5px;
+        right: 5px;
+    }
+    
+    .icon-btn {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* ===================================
+   UTILITY CLASSES
+   =================================== */
+
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.no-select {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
